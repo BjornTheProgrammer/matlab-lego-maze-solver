@@ -1,11 +1,12 @@
 v = brick.GetBattVoltage() ;
-% brick.SetColorMode(4)
+
 
 brick.TouchPressed(1) 
 while brick.TouchPressed(1) == 0
- brick.MoveMotor('A', 100);
+ % .brick.MoveMotor('A', 100);
  dist = brick.UltrasonicDist(2);
  disp(dist); 
+ pause(0.75);
 end
 
 brick.StopAllMotors();
