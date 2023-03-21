@@ -20,12 +20,23 @@ while brick.TouchPressed(1) == 0
     distances = helpers.getAllDistances(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, 70);
     
     brick.playTone(100, 300, 500);
-    [maxDistance, maxIndex] = max(distances);
-    newDirection = maxIndex * 90 - 90;
+    
+    index = 1;
+    if (distances(1) > 60)
+        index = 1;
+    elseif (distances(2) > 60)
+        index = 2;
+    elseif (distances(3) > 60)
+        index = 3;
+    else
+        index = 4;
+    end
+
+    newDirection = index * 90 - 90;
     helpers.rotateDegrees(brick, leftMotorPort, rightMotorPort, gyroSensorPort, 40, newDirection);
     
     brick.playTone(100, 300, 500);
-    helpers.moveTillDistance(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, -60, 20);
+    helpers.moveTillDistance(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, -60, 30);
 
     color = brick.ColorCode(colorSensorPort);
     angle = brick.GyroAngle(gyroSensorPort);
