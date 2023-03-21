@@ -8,6 +8,8 @@ clawMotorPort = 'C';
 brick.SetColorMode(colorSensorPort, 2);
 brick.GyroCalibrate(gyroSensorPort);
 
+lastDirection = 0;
+
 loop = 0;
 
 brick.TouchPressed(1);
@@ -19,28 +21,22 @@ while brick.TouchPressed(1) == 0
     
     brick.playTone(100, 300, 500);
     [maxDistance, maxIndex] = max(distances);
-
-    helpers.rotateDegrees(brick, leftMotorPort, rightMotorPort, gyroSensorPort, 40, maxIndex * 90 - 90);
+    newDirection = maxIndex * 90 - 90;
+    helpers.rotateDegrees(brick, leftMotorPort, rightMotorPort, gyroSensorPort, 40, newDirection);
+    
     brick.playTone(100, 300, 500);
-
-    helpers.moveTillDistance(brick, leftMotorPort, rightMotorPort, ultrasonicSensorPort, -60, 20);
-    brick.playTone(100, 300, 500);
+    helpers.moveTillDistance(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, -60, 20);
 
     color = brick.ColorCode(colorSensorPort);
     angle = brick.GyroAngle(gyroSensorPort);
 
-    output = "";
-    for distance = distances
-        output = output + fprintf("%.2fcm ", distance);
-    end
-    output = output + fprintf("- color: %d - degrees: %.2f", color, angle);
-    disp(output);
 
     loop = loop + 1;
-    % if loop == 3
-    %     break;
-    % end
-    break;
+    if loop == 3
+        break;
+    end
+
+    lastDirection = newDirection;
 end
 
 brick.StopAllMotors();

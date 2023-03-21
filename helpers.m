@@ -1,15 +1,19 @@
 classdef helpers
     methods(Static)
+        function x = adjustSpeed(degree, target, speed)
+            x = (abs(degree - target) .^ 3 / 900000 + .2) * speed;
+        end
+
         function rotateDegrees(brick, leftMotorPort, rightMotorPort, gyroPort, speed, amount)
             degree = brick.GyroAngle(gyroPort);
             while degree ~= amount
-                adjustedSpeed = (abs(degree - amount) .^ 3 / 900000 + .2) * speed;
+                updatedSpeed = helpers.adjustSpeed(degree, amount, speed);
                 if degree - amount > 0
-                    brick.MoveMotor(leftMotorPort, adjustedSpeed);
-                    brick.MoveMotor(rightMotorPort, -adjustedSpeed);
+                    brick.MoveMotor(leftMotorPort, updatedSpeed);
+                    brick.MoveMotor(rightMotorPort, -updatedSpeed);
                 else
-                    brick.MoveMotor(leftMotorPort, -adjustedSpeed);
-                    brick.MoveMotor(rightMotorPort, adjustedSpeed);
+                    brick.MoveMotor(leftMotorPort, -updatedSpeed);
+                    brick.MoveMotor(rightMotorPort, updatedSpeed);
                 end
         
                 degree = brick.GyroAngle(gyroPort);
@@ -20,11 +24,23 @@ classdef helpers
         end
         
         
-        function moveTillDistance(brick, leftMotorPort, rightMotorPort, distanceSensorPort, speed, target)
+        function moveTillDistance(brick, leftMotorPort, rightMotorPort, gyroPort, distanceSensorPort, speed, target)
             distance = brick.UltrasonicDist(distanceSensorPort);
+            beginningDegree = brick.GyroAngle(gyroPort);
+
             while target < distance
-                brick.MoveMotor(leftMotorPort, speed);
-                brick.MoveMotor(rightMotorPort, speed);
+                currentDegree = brick.GyroAngle(gyroPort);
+                updatedSpeed = helpers.adjustSpeed(currentDegree, target, .8);
+                if (currentDegree > beginningDegree)
+                    brick.MoveMotor(leftMotorPort, speed - updatedSpeed);
+                    brick.MoveMotor(rightMotorPort, speed);
+                elseif (currentDegree < beginningDegree)
+                    brick.MoveMotor(leftMotorPort, speed);
+                    brick.MoveMotor(rightMotorPort, speed - updatedSpeed);
+                else
+                    brick.MoveMotor(leftMotorPort, speed);
+                    brick.MoveMotor(rightMotorPort, speed);
+                end
         
                 distance = brick.UltrasonicDist(distanceSensorPort);
             end
