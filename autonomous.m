@@ -46,7 +46,7 @@ while brick.TouchPressed(1) == 0
         brick.playTone(100, 300, 500);
         break;
     elseif (color == 5)
-        pause(1);
+        pause(2);
     end
 
 
