@@ -29,7 +29,7 @@ while brick.TouchPressed(1) == 0
     % color = brick.ColorCode(colorSensorPort);
     % angle = brick.GyroAngle(gyroSensorPort);
 
-    helpers.rotateDegrees(80, 0);
+    helpers.moveTillDistance(-80, 20);
 
     color = brick.ColorCode(colorSensorPort);
     disp(color);
@@ -47,7 +47,6 @@ while brick.TouchPressed(1) == 0
         break;
     elseif (color == 5)
         pause(1);
-        helpers.moveTillDistance(80, 20)
     end
 
 

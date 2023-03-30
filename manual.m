@@ -20,19 +20,19 @@ while brick.TouchPressed(1) == 0
         case 'q'
             break
         case 'uparrow'
-            brick.MoveMotor('AB', -100);
+            brick.MoveMotor('AB', -100 * drivePowerMultiplier);
         case 'downarrow'
-            brick.MoveMotor('AB', 100);
+            brick.MoveMotor('AB', 100 * drivePowerMultiplier);
         case 'leftarrow'
-            brick.MoveMotor('A', -100);
-            brick.MoveMotor('B', 100);
+            brick.MoveMotor('A', -100 * drivePowerMultiplier);
+            brick.MoveMotor('B', 100 * drivePowerMultiplier);
         case 'rightarrow'
-            brick.MoveMotor('A', 100);
-            brick.MoveMotor('B', -100);
+            brick.MoveMotor('A', 100 * drivePowerMultiplier);
+            brick.MoveMotor('B', -100 * drivePowerMultiplier);
         case 'w'
-            brick.MoveMotor('C', -100);
+            brick.MoveMotor('C', -100 * drivePowerMultiplier);
         case 's'
-            brick.MoveMotor('C', 100);
+            brick.MoveMotor('C', 100 * drivePowerMultiplier);
         case 0
             brick.MoveMotor('ABC', 0);
     end
