@@ -79,15 +79,22 @@ classdef helpers
         
         function distances = getAllDistances(speed)
             global brick;
-            global colorSensorPort;
             global ultrasonicSensorPort;
+            global distanceMotorPort;
 
             distances = [brick.UltrasonicDist(ultrasonicSensorPort) 0 0 0];
             
+            brick.MoveMotorAngleAbs(distanceMotorPort, speed, 10, 'Brake');
+            brick.WaitForMotor(distanceMotorPort);
+
             for degree = 90:90:270
-                helpers.rotateDegrees(speed, degree);
+                brick.MoveMotorAngleAbs(distanceMotorPort, speed, (degree - 10) * -1, 'Brake');
+                brick.WaitForMotor(distanceMotorPort);
                 distances(round(degree / 90) + 1) = brick.UltrasonicDist(ultrasonicSensorPort);
             end
+
+            brick.MoveMotorAngleAbs(distanceMotorPort, speed, 10, 'Brake');
+            brick.WaitForMotor(distanceMotorPort);
         end
     end
 end
