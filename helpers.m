@@ -34,6 +34,55 @@ classdef helpers
             brick.StopMotor(leftMotorPort, 'Coast');
             brick.StopMotor(rightMotorPort, 'Coast');
         end
+
+
+        function moveTillIntersection(speed, wallDistLeft, wallDistRight)
+            global brick;
+            global colorSensorPort;
+            global gyroSensorPort;
+            global leftMotorPort;
+            global rightMotorPort;
+            global distanceMotorPort;
+            global ultrasonicSensorPort;
+
+            brick.MoveMotorAngleAbs(distanceMotorPort, 90, 0, 'Brake');
+            brick.WaitForMotor(distanceMotorPort);
+            lastDistanceMotorAngle = 0;
+
+            distanceLeft = 0;
+            distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
+            distanceMotorDirection = 1;
+
+            while ((distanceLeft < wallDistLeft) && (distanceRight < wallDistRight))
+                distanceMotorAngle = brick.motorGetCount(distanceMotorPort);
+
+                if (distanceMotorAngle >= -20 && lastDistanceMotorAngle == distanceMotorAngle)
+                    distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
+                    brick.MoveMotorAngleAbs(distanceMotorPort, 90, -190, 'Brake');
+                elseif (distanceMotorAngle <= -20 && lastDistanceMotorAngle == distanceMotorAngle)
+                    distanceLeft = brick.UltrasonicDist(ultrasonicSensorPort);
+                    brick.MoveMotorAngleAbs(distanceMotorPort, 90, 0, 'Brake');
+                end
+
+
+                color = brick.ColorCode(colorSensorPort);
+                
+                if (color == 2 | color == 3 | color == 5) 
+                    brick.StopMotor(leftMotorPort, 'Coast');
+                    brick.StopMotor(rightMotorPort, 'Coast');
+                    return;
+                end
+
+                brick.MoveMotor(leftMotorPort, speed);
+                brick.MoveMotor(rightMotorPort, speed);
+
+                lastDistanceMotorAngle = distanceMotorAngle;
+            end
+        
+            brick.StopMotor(leftMotorPort, 'Coast');
+            brick.StopMotor(rightMotorPort, 'Coast');
+            brick.StopMotor(distanceMotorPort, 'Break');
+        end
         
         
         function moveTillDistance(speed, target)
