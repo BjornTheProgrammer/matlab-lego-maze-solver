@@ -53,14 +53,20 @@ classdef helpers
             distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
             distanceMotorDirection = 1;
 
-            while ((distanceLeft < wallDistLeft) && (distanceRight < wallDistRight))
+            while (1 == 1)
                 distanceMotorAngle = brick.motorGetCount(distanceMotorPort);
 
                 if (distanceMotorAngle >= -20 && lastDistanceMotorAngle == distanceMotorAngle)
                     distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
+                    if (distanceRight < wallDistRight) 
+                        break;
+                    end
                     brick.MoveMotorAngleAbs(distanceMotorPort, 90, -190, 'Brake');
                 elseif (distanceMotorAngle <= -20 && lastDistanceMotorAngle == distanceMotorAngle)
                     distanceLeft = brick.UltrasonicDist(ultrasonicSensorPort);
+                    if (distanceLeft < wallDistLeft)
+                        break;
+                    end
                     brick.MoveMotorAngleAbs(distanceMotorPort, 90, 0, 'Brake');
                 end
 
