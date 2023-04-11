@@ -4,34 +4,29 @@ brick.TouchPressed(1);
 while brick.TouchPressed(1) == 0
     pause(0.001);
     disp("Starting auto");
-    
-    % brick.playTone(100, 300, 500);
-    % distances = helpers.getAllDistances(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, 70);
-    
-    % brick.playTone(100, 300, 500);
-    
-    % index = 1;
-    % if (distances(1) > 60)
-    %     index = 1;
-    % elseif (distances(2) > 60)
-    %     index = 2;
-    % elseif (distances(3) > 60)
-    %     index = 3;
-    % else
-    %     index = 4;
-    % end
-
-    % newDirection = index * 90 - 90;
-    % helpers.rotateDegrees(brick, leftMotorPort, rightMotorPort, gyroSensorPort, 40, newDirection);
-    
-    % brick.playTone(100, 300, 500);
-    % helpers.moveTillDistance(brick, leftMotorPort, rightMotorPort, gyroSensorPort, ultrasonicSensorPort, -60, 30);
-
-    % color = brick.ColorCode(colorSensorPort);
-    % angle = brick.GyroAngle(gyroSensorPort);
 
     helpers.moveTillIntersection(-80, 30, 40);
-    % brick.MoveMotorAngleAbs
+    distances = helpers.getAllDistances(80)
+    
+    absangle = brick.GyroAngle(gyroSensorPort);
+
+    if distances(3) >= 40
+        helpers.rotateDegrees(80, absangle - 90);
+    elseif distances(2) >= 40
+        % helpers.rotateDegrees(80)
+        % Do nothing
+    elseif distances(3)
+        helpers.rotateDegrees(80, absangle + 90);
+    else
+        helpers.rotateDegrees(80, absangle - 180);
+    end
+
+    brick.MoveMotorAngleRel(leftMotorPort, 80, 360 * 2, 'Break');
+    brick.MoveMotorAngleRel(rightMotorPort, 80, 360 * 2, 'Break');
+
+    brick.WaitForMotor(leftMotorPort);
+    brick.WaitForMotor(rightMotorPort); 
+
 
     color = brick.ColorCode(colorSensorPort);
     disp(color);
@@ -51,7 +46,11 @@ while brick.TouchPressed(1) == 0
         pause(2);
     end
 
-    break;
+
+    % loop = loop + 1;
+    % if loop == 3
+        % break;
+    % end
 end
 
 brick.StopAllMotors();

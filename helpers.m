@@ -58,7 +58,7 @@ classdef helpers
 
                 if (distanceMotorAngle >= -20 && lastDistanceMotorAngle == distanceMotorAngle)
                     distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
-                    if (distanceRight < wallDistRight) 
+                    if (distanceRight > wallDistRight) 
                         break;
                     end
                     brick.MoveMotorAngleAbs(distanceMotorPort, 90, -190, 'Brake');
@@ -139,11 +139,11 @@ classdef helpers
 
             distances = [brick.UltrasonicDist(ultrasonicSensorPort) 0 0 0];
             
-            brick.MoveMotorAngleAbs(distanceMotorPort, speed, 10, 'Brake');
+            brick.MoveMotorAngleAbs(distanceMotorPort, speed, 0, 'Brake');
             brick.WaitForMotor(distanceMotorPort);
 
             for degree = 90:90:270
-                brick.MoveMotorAngleAbs(distanceMotorPort, speed, (degree - 10) * -1, 'Brake');
+                brick.MoveMotorAngleAbs(distanceMotorPort, speed, degree * -1, 'Brake');
                 brick.WaitForMotor(distanceMotorPort);
                 distances(round(degree / 90) + 1) = brick.UltrasonicDist(ultrasonicSensorPort);
             end
