@@ -136,11 +136,17 @@ classdef helpers
             global brick;
             global ultrasonicSensorPort;
             global distanceMotorPort;
+            global colorSensorPort;
 
             distances = [brick.UltrasonicDist(ultrasonicSensorPort) 0 0 0];
             
             brick.MoveMotorAngleAbs(distanceMotorPort, speed, 0, 'Brake');
             brick.WaitForMotor(distanceMotorPort);
+
+            color = brick.ColorCode(colorSensorPort);
+            if (color == 2 | color == 3 | color == 5) 
+                return;
+            end
 
             for degree = 90:90:270
                 brick.MoveMotorAngleAbs(distanceMotorPort, speed, degree * -1, 'Brake');
