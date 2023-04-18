@@ -7,7 +7,15 @@ while key ~= 'q'
     pause(0.001);
     disp("Starting auto");
 
-    helpers.moveTillIntersection(-80, 30, 40);
+    helpers.moveTillIntersection(-30, 50, 60);
+
+    brick.MoveMotor(leftMotorPort, -80);
+    brick.MoveMotor(rightMotorPort, -80);
+
+    pause(.5);
+
+    brick.StopAllMotors();
+
     distances = helpers.getAllDistances(80)
     
     absangle = brick.GyroAngle(gyroSensorPort);
