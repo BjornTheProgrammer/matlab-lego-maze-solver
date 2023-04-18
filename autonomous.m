@@ -1,8 +1,9 @@
 loop = 0;
 directions = string([]);
 
+InitKeyboard();
 brick.TouchPressed(1);
-while brick.TouchPressed(1) == 0
+while key ~= 'q'
     pause(0.001);
     disp("Starting auto");
 
@@ -52,10 +53,10 @@ while brick.TouchPressed(1) == 0
 
     directions
 
-    while String(directions "left", directions "backwards"){
-        directions = [directions, "straight"]
+    % while String(directions "left", directions "backwards"){
+    %     directions = [directions, "straight"]
         
-       }
+    %    }
 
 
     % loop = loop + 1;
@@ -63,10 +64,10 @@ while brick.TouchPressed(1) == 0
         % break;
     % end
 
-    break;
+    % break;
 end
-
 brick.StopAllMotors();
+CloseKeyboard();
 
 voltage = brick.GetBattVoltage();
 output = fprintf("voltage: %.4f", voltage);
