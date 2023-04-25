@@ -13,17 +13,21 @@ classdef helpers
 
             degree = brick.GyroAngle(gyroSensorPort);
             while degree ~= amount
+                disp(degree);
+                disp(amount);
                 color = brick.ColorCode(colorSensorPort);
                 updatedSpeed = helpers.adjustSpeed(degree, amount, speed);
                 if (color == 2 | color == 3 | color == 5) 
                     brick.StopMotor(leftMotorPort, 'Coast');
                     brick.StopMotor(rightMotorPort, 'Coast');
-                    return;
+                    break;
                 end
                 if degree - amount > 0
+                    disp("rotate left");
                     brick.MoveMotor(leftMotorPort, updatedSpeed);
                     brick.MoveMotor(rightMotorPort, -updatedSpeed);
                 else
+                    disp("rotate right");
                     brick.MoveMotor(leftMotorPort, -updatedSpeed);
                     brick.MoveMotor(rightMotorPort, updatedSpeed);
                 end
@@ -44,6 +48,7 @@ classdef helpers
             global rightMotorPort;
             global distanceMotorPort;
             global ultrasonicSensorPort;
+            global touchSensorPort;
 
             brick.MoveMotorAngleAbs(distanceMotorPort, 90, 0, 'Brake');
             brick.WaitForMotor(distanceMotorPort);
@@ -57,17 +62,21 @@ classdef helpers
                 distanceMotorAngle = brick.motorGetCount(distanceMotorPort);
 
                 if (distanceMotorAngle >= -20 && lastDistanceMotorAngle == distanceMotorAngle)
-                    distanceRight = brick.UltrasonicDist(ultrasonicSensorPort);
+                    distanceRight = brick.UltrasonicDist(ultrasonicSensorPort)
                     if (distanceRight > wallDistRight) 
+                        disp("in distanceRight break");
                         break;
                     end
                     brick.MoveMotorAngleAbs(distanceMotorPort, 90, -190, 'Brake');
                 elseif (distanceMotorAngle <= -20 && lastDistanceMotorAngle == distanceMotorAngle)
-                    distanceLeft = brick.UltrasonicDist(ultrasonicSensorPort);
-                    if (distanceLeft < wallDistLeft)
+                    distanceLeft = brick.UltrasonicDist(ultrasonicSensorPort)
+                    if (distanceLeft > wallDistLeft)
+                        disp("in distanceLeft break");
                         break;
                     end
                     brick.MoveMotorAngleAbs(distanceMotorPort, 90, 0, 'Brake');
+                elseif (brick.TouchPressed(touchSensorPort) == 1)
+                    break;
                 end
 
 
@@ -76,7 +85,7 @@ classdef helpers
                 if (color == 2 | color == 3 | color == 5) 
                     brick.StopMotor(leftMotorPort, 'Coast');
                     brick.StopMotor(rightMotorPort, 'Coast');
-                    return;
+                    break;
                 end
 
                 brick.MoveMotor(leftMotorPort, speed);

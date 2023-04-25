@@ -5,8 +5,7 @@ drivePowerMultiplier = 1;
 
 InitKeyboard();
 
-brick.TouchPressed(1);
-while brick.TouchPressed(1) == 0
+while 1 == 1
     pause(0.001);
     switch key
         case 'a'
@@ -20,9 +19,9 @@ while brick.TouchPressed(1) == 0
         case 'q'
             break
         case 'uparrow'
-            brick.MoveMotor('AB', -100 * drivePowerMultiplier);
-        case 'downarrow'
             brick.MoveMotor('AB', 100 * drivePowerMultiplier);
+        case 'downarrow'
+            brick.MoveMotor('AB', -100 * drivePowerMultiplier);
         case 'leftarrow'
             brick.MoveMotor('A', -100 * drivePowerMultiplier);
             brick.MoveMotor('B', 100 * drivePowerMultiplier);

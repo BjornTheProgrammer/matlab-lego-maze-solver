@@ -7,6 +7,8 @@ while key ~= 'q'
     pause(0.001);
     disp("Starting auto");
 
+    % helpers.rotateDegrees(80, 90);
+
     helpers.moveTillIntersection(-30, 50, 60);
 
     brick.MoveMotor(leftMotorPort, -80);
@@ -18,28 +20,28 @@ while key ~= 'q'
 
     distances = helpers.getAllDistances(80)
     
-    absangle = brick.GyroAngle(gyroSensorPort);
+    absangle = brick.GyroAngle(gyroSensorPort)
+
+    d = 90;
+    absangle = round(absangle./d).*d
 
     if distances(3) >= 40
-        helpers.rotateDegrees(80, absangle - 90);
+        disp("rotate left");
+        helpers.rotateDegrees(90, absangle - 90);
         directions = [directions, "left"];
     elseif distances(2) >= 40
-        % helpers.rotateDegrees(80)
+        disp("rotate straight");
         % Do nothing
         directions = [directions, "straight"];
     elseif distances(3)
-        helpers.rotateDegrees(80, absangle + 90);
+        disp("rotate right");
+        helpers.rotateDegrees(90, absangle + 90);
         directions = [directions, "right"];
     else
-        helpers.rotateDegrees(80, absangle - 180);
+        disp("rotate back");
+        helpers.rotateDegrees(90, absangle - 180);
         directions = [directions, "backwards"];
     end
-
-    brick.MoveMotorAngleRel(leftMotorPort, 80, 360 * 2, 'Break');
-    brick.MoveMotorAngleRel(rightMotorPort, 80, 360 * 2, 'Break');
-
-    brick.WaitForMotor(leftMotorPort);
-    brick.WaitForMotor(rightMotorPort); 
 
     color = brick.ColorCode(colorSensorPort)
     disp(color);
@@ -58,8 +60,6 @@ while key ~= 'q'
     elseif (color == 5)
         pause(2);
     end
-
-    directions
 
     % while String(directions "left", directions "backwards"){
     %     directions = [directions, "straight"]
