@@ -9,39 +9,7 @@ while key ~= 'q'
 
     % helpers.rotateDegrees(80, 90);
 
-    helpers.moveTillIntersection(-30, 50, 60);
-
-    brick.MoveMotor(leftMotorPort, -80);
-    brick.MoveMotor(rightMotorPort, -80);
-
-    pause(.5);
-
-    brick.StopAllMotors();
-
-    distances = helpers.getAllDistances(80)
-    
-    absangle = brick.GyroAngle(gyroSensorPort)
-
-    d = 90;
-    absangle = round(absangle./d).*d
-
-    if distances(3) >= 40
-        disp("rotate left");
-        helpers.rotateDegrees(90, absangle - 90);
-        directions = [directions, "left"];
-    elseif distances(2) >= 40
-        disp("rotate straight");
-        % Do nothing
-        directions = [directions, "straight"];
-    elseif distances(3)
-        disp("rotate right");
-        helpers.rotateDegrees(90, absangle + 90);
-        directions = [directions, "right"];
-    else
-        disp("rotate back");
-        helpers.rotateDegrees(90, absangle - 180);
-        directions = [directions, "backwards"];
-    end
+    helpers.moveTillIntersection(-50, 50, 60);
 
     color = brick.ColorCode(colorSensorPort)
     disp(color);
@@ -59,6 +27,37 @@ while key ~= 'q'
         break;
     elseif (color == 5)
         pause(2);
+    end
+
+    brick.MoveMotor(leftMotorPort, -80);
+    brick.MoveMotor(rightMotorPort, -80);
+
+    pause(.8);
+
+    brick.StopAllMotors();
+
+    distances = helpers.getAllDistances(80)
+    
+    absangle = brick.GyroAngle(gyroSensorPort)
+
+    d = 90;
+    absangle = round(absangle./d).*d
+
+    if distances(1) >= 40
+        disp("rotate right");
+        helpers.rotateDegrees(100, absangle + 90);
+        directions = [directions, "right"];
+    elseif distances(2) >= 40
+        disp("rotate straight");
+        directions = [directions, "straight"];
+    elseif distances(3) >= 40
+        disp("rotate left");
+        helpers.rotateDegrees(100, absangle - 90);
+        directions = [directions, "left"];
+    else
+        disp("rotate back");
+        helpers.rotateDegrees(100, absangle - 180);
+        directions = [directions, "backwards"];
     end
 
     % while String(directions "left", directions "backwards"){
